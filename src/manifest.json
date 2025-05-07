@@ -1,0 +1,77 @@
+{
+  "id": "com.starwars.addon",
+  "name": "Star Wars Universe",
+  "description": "Explore the Star Wars Universe by sagas, series, eras, and more!",
+  "version": "1.0.0",
+  "logo": "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
+  "background": "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
+  "catalogs": [
+    {
+      "type": "StarWars",
+      "id": "sw-skywalker-saga",
+      "name": "Skywalker Saga"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-anthology-films",
+      "name": "Anthology Films"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-live-action-series",
+      "name": "Live-Action Series"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-animated-series",
+      "name": "Animated Series"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-micro-series-shorts",
+      "name": "Micro-Series & Shorts"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-high-republic-era",
+      "name": "High Republic Era"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-empire-era",
+      "name": "Empire Era"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-new-republic-era",
+      "name": "New Republic Era"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-bounty-hunters-underworld",
+      "name": "Bounty Hunters & Underworld"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-jedi-sith-lore",
+      "name": "Jedi & Sith Lore"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-droids-creatures",
+      "name": "Droids & Creatures"
+    }
+  ],
+  "resources": ["catalog"],
+  "types": ["movie", "series"],
+  "idPrefixes": ["sw_"],
+  "behaviorHints": {
+    "configurable": true
+  },
+  "contactEmail": "nayifveliya99@gmail.com",
+
+  "stremioAddonsConfig": {
+    "issuer": "https://stremio-addons.net",
+    "signature": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..2TNKOWJrUe7Y9D838FIDfA.i8aMASGnH0eOTpA2ZJEi6ib2Axjh-z8RG--I5XCnH40IjD_enWauU2WU0FwiFdAGjg6e_Uh0Thjkl2R_405M7cSOZib4I1RvKiiCsXn6EBC5GmTJ-W1ZsMaeJGVwXSrF.FBzgXVi9Ih-GRdBozfoglQ"
+  }
+}

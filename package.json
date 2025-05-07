@@ -1,0 +1,15 @@
+{
+  "name": "star-wars-addon",
+  "version": "1.0.0",
+  "description": "A Stremio addon for exploring the Star Wars Universe.",
+  "scripts": {
+    "start:server": "node src/start.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "compression": "^1.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2"
+  }
+}
