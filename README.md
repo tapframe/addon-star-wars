@@ -20,7 +20,7 @@ Explore the Star Wars Universe within Stremio! Browse movies and series organize
 
 Create your personalized Star Wars Universe addon with only the catalogs you want:
 
-1.  Visit the configuration page: `https://addon-star-wars.onrender.com/configure`
+1.  Visit the configuration page: [`https://addon-star-wars.onrender.com/configure`](https://addon-star-wars.onrender.com/configure)
 2.  Select the catalogs you want to include.
 3.  Click the "Generate Installation Link" button.
 4.  Copy the generated link or click the "Install in Stremio" button.
@@ -31,7 +31,7 @@ Create your personalized Star Wars Universe addon with only the catalogs you wan
 To install the addon with all catalogs included:
 
 1.  Open Stremio.
-2.  Paste the default manifest URL into the Addon search bar: `https://addon-star-wars.onrender.com/manifest.json`
+2.  Paste the default manifest URL into the Addon search bar: [`https://addon-star-wars.onrender.com/manifest.json`](https://addon-star-wars.onrender.com/manifest.json)
 3.  Press Enter to install.
 
 ---
