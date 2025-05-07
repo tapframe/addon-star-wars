@@ -265,37 +265,32 @@ app.get('/configure', (req, res) => {
 
 // Custom catalog manifest endpoint
 app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
-    const catalogsParam = req.params.catalogsParam;
-    
-    // Parse the selected catalogs from the URL
-    const selectedCatalogIds = catalogsParam ? decodeURIComponent(catalogsParam).split(',') : [];
-    
-    console.log(`Custom catalog manifest requested - Selected catalogs: ${selectedCatalogIds.join(', ')}`);
-    
-    // Filter catalogs based on user selection
-    const allCatalogs = getAllCatalogs();
-    let filteredCatalogs = allCatalogs;
-    
-    if (selectedCatalogIds.length > 0) {
-        filteredCatalogs = allCatalogs.filter(catalog => selectedCatalogIds.includes(catalog.id));
+    const { catalogsParam } = req.params;
+    const selectedCatalogIds = catalogsParam.split(',').map(id => id.trim());
+
+    const allApiCatalogs = getAllCatalogs(); // Fetch all defined API catalogs
+
+    // Filter catalogs based on selected IDs
+    const selectedApiCatalogs = allApiCatalogs.filter(catalog => selectedCatalogIds.includes(catalog.id));
+
+    if (selectedApiCatalogs.length === 0) {
+        return res.status(404).send('No valid catalogs selected or found.');
     }
-    
-    // Create the customized manifest
+
     const manifest = {
-        id: "com.starwars.addon.custom",
-        name: "Star Wars Universe Custom",
-        description: "Your personalized Star Wars Universe collection",
-        version: "1.0.0",
-        logo: "URL_TO_STAR_WARS_ICON.png",
-        background: "URL_TO_STAR_WARS_BACKGROUND.jpg",
-        catalogs: filteredCatalogs,
-        resources: ["catalog"],
-        types: ["movie", "series"],
-        idPrefixes: ["sw_"],
+        id: `com.starwars.addon.custom.${selectedCatalogIds.join('.')}`.slice(0, 100),
+        version: '1.0.0',
+        name: `Star Wars Universe (Custom - ${selectedApiCatalogs.map(c=>c.name).join(', ').substring(0,30)})`,
+        description: `Your personalized selection of Star Wars catalogs: ${selectedApiCatalogs.map(c => c.name).join(', ')}`,
+        logo: 'https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png',
+        background: 'https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5',
+        resources: ['catalog'],
+        types: ['movie', 'series'],
+        idPrefixes: ['sw_'],
         behaviorHints: {
             configurable: true
         },
-        contactEmail: "YOUR_EMAIL@example.com"
+        contactEmail: "nayifveliya99@gmail.com"
     };
     
     res.json(manifest);
@@ -310,8 +305,8 @@ app.get('/manifest.json', (req, res) => {
         name: "Star Wars Universe",
         description: "Explore the Star Wars Universe by sagas, series, eras, and more!",
         version: "1.0.0",
-        logo: "URL_TO_STAR_WARS_ICON.png",
-        background: "URL_TO_STAR_WARS_BACKGROUND.jpg",
+        logo: "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
+        background: "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
         catalogs: getAllCatalogs(),
         resources: ["catalog"],
         types: ["movie", "series"],
@@ -319,7 +314,7 @@ app.get('/manifest.json', (req, res) => {
         behaviorHints: {
             configurable: true
         },
-        contactEmail: "YOUR_EMAIL@example.com"
+        contactEmail: "nayifveliya99@gmail.com"
     };
     
     res.json(manifest);
