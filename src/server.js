@@ -280,10 +280,11 @@ app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
     const manifest = {
         id: `com.starwars.addon.custom.${selectedCatalogIds.join('.')}`.slice(0, 100),
         version: '1.0.0',
-        name: `Star Wars Universe (Custom - ${selectedApiCatalogs.map(c=>c.name).join(', ').substring(0,30)})`,
+        name: "Star Wars Custom",
         description: `Your personalized selection of Star Wars catalogs: ${selectedApiCatalogs.map(c => c.name).join(', ')}`,
         logo: 'https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png',
         background: 'https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5',
+        catalogs: selectedApiCatalogs,
         resources: ['catalog'],
         types: ['movie', 'series'],
         idPrefixes: ['sw_'],

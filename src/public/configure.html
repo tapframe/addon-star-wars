@@ -735,9 +735,20 @@
                         return;
                     }
                     const baseUrl = window.location.origin;
-                    const selectedIds = this.selectedCatalogs.join(',');
-                    this.installUrl = `${baseUrl}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
-                    this.stremioUrl = `stremio://${this.installUrl}`;
+                    const host = window.location.host;
+
+                    // Check if all catalogs are selected
+                    if (this.catalogs && this.selectedCatalogs.length === this.catalogs.length) {
+                        // All selected, use the default manifest URL
+                        this.installUrl = `${baseUrl}/manifest.json`;
+                        this.stremioUrl = `stremio://${host}/manifest.json`;
+                    } else {
+                        // Subset selected, use the custom catalog URL
+                        const selectedIds = this.selectedCatalogs.join(',');
+                        this.installUrl = `${baseUrl}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
+                        this.stremioUrl = `stremio://${host}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
+                    }
+
                     this.showInstallPanel = true;
                     this.$nextTick(() => {
                         const installPanel = document.getElementById('install-panel');
