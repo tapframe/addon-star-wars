@@ -48,8 +48,8 @@ If you want to install the addon with all catalogs included (and the server is r
 
 1.  Clone the repository (or download the source):
     ```bash
-    git clone YOUR_REPOSITORY_URL # Replace with your repo URL
-    cd your-repo-directory
+    git clone https://github.com/tapframe/addon-star-wars.git # Replace with your repo URL
+    cd addon-star-wars
     ```
 
 2.  Install dependencies:
@@ -125,7 +125,7 @@ This project is under the MIT License. (Or update if different)
 
 ---
 
-## �� Acknowledgements
+##  Acknowledgements
 
 This addon is a modified fork of the original Marvel addon created by **joaogonp**. Many thanks for the initial work!
 
