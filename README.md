@@ -20,19 +20,18 @@ Explore the Star Wars Universe within Stremio! Browse movies and series organize
 
 Create your personalized Star Wars Universe addon with only the catalogs you want:
 
-1.  **Run the addon server locally** (See "Running Locally" below).
-2.  Visit the configuration page in your browser: `http://localhost:7000/configure` (Adjust port if needed).
-3.  Select the catalogs you want to include.
-4.  Click the "Generate Installation Link" button.
-5.  Copy the generated `stremio://` link.
-6.  Open Stremio, paste the link into the Addon search bar, and press Enter to install.
+1.  Visit the configuration page: `https://addon-star-wars.onrender.com/configure`
+2.  Select the catalogs you want to include.
+3.  Click the "Generate Installation Link" button.
+4.  Copy the generated link or click the "Install in Stremio" button.
+5.  Open Stremio (if it didn't open automatically), paste the link into the Addon search bar if needed, and press Enter to install.
 
 ### Manual Installation (All Catalogs)
 
-If you want to install the addon with all catalogs included (and the server is running locally):
+To install the addon with all catalogs included:
 
 1.  Open Stremio.
-2.  Paste the default manifest URL into the Addon search bar: `http://localhost:7000/manifest.json` (Adjust port if needed).
+2.  Paste the default manifest URL into the Addon search bar: `https://addon-star-wars.onrender.com/manifest.json`
 3.  Press Enter to install.
 
 ---
