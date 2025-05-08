@@ -49,19 +49,19 @@ To install the addon with all catalogs included:
     ```bash
     git clone https://github.com/tapframe/addon-star-wars.git # Replace with your repo URL
     cd addon-star-wars
-    ```
+```
 
 2.  Install dependencies:
     ```bash
-    npm install
-    ```
+npm install
+```
 
 3.  Create a `.env` file in the root directory with your API keys:
     ```dotenv
     TMDB_API_KEY=your_tmdb_api_key_here
     OMDB_API_KEY=your_omdb_api_key_here # Optional, needed for ratings
     PORT=7000 # Optional, defaults to 7000
-    ```
+```
 
 4.  **(Optional) Populate Data Files:** Run the data fetching scripts. This requires the TMDB API key in your `.env` file.
     ```bash
@@ -70,16 +70,18 @@ To install the addon with all catalogs included:
     node scripts/fetchLiveActionSeriesData.js
     # ... run all other fetch*.js scripts in the scripts/ directory ...
     node scripts/fetchDroidsCreaturesData.js
+    node scripts/fetchMoviesSeriesChronologicalData.js
+    node scripts/fetchMoviesSeriesReleaseData.js
     ```
     *Alternatively, run the combined command (PowerShell example):*
     ```powershell
-    node scripts/fetchSkywalkerSagaData.js; node scripts/fetchAnthologyFilmsData.js; node scripts/fetchLiveActionSeriesData.js; node scripts/fetchAnimatedSeriesData.js; node scripts/fetchMicroSeriesShortsData.js; node scripts/fetchHighRepublicEraData.js; node scripts/fetchEmpireEraData.js; node scripts/fetchNewRepublicEraData.js; node scripts/fetchBountyHuntersData.js; node scripts/fetchJediSithLoreData.js; node scripts/fetchDroidsCreaturesData.js
+    node scripts/fetchSkywalkerSagaData.js; node scripts/fetchAnthologyFilmsData.js; node scripts/fetchLiveActionSeriesData.js; node scripts/fetchAnimatedSeriesData.js; node scripts/fetchMicroSeriesShortsData.js; node scripts/fetchHighRepublicEraData.js; node scripts/fetchEmpireEraData.js; node scripts/fetchNewRepublicEraData.js; node scripts/fetchBountyHuntersData.js; node scripts/fetchJediSithLoreData.js; node scripts/fetchDroidsCreaturesData.js; node scripts/fetchMoviesSeriesChronologicalData.js; node scripts/fetchMoviesSeriesReleaseData.js
     ```
 
 5.  Start the server:
     ```bash
-    npm run start:server
-    ```
+npm run start:server
+```
 
 6.  The addon server will be running.
     *   Configuration Page: `http://localhost:7000/configure`
@@ -91,6 +93,8 @@ To install the addon with all catalogs included:
 
 The following catalogs can be selected via the configuration page:
 
+*   **sw-movies-series-chronological**: Movies & Series Chronological Order
+*   **sw-movies-series-release**: Movies & Series Release Order
 *   **sw-skywalker-saga**: Skywalker Saga (Episodes I-IX)
 *   **sw-anthology-films**: Anthology Films (Rogue One, Solo)
 *   **sw-live-action-series**: Live-Action Series (Mandalorian, Andor, etc.)

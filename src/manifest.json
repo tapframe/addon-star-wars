@@ -2,10 +2,20 @@
   "id": "com.starwars.addon",
   "name": "Star Wars Universe",
   "description": "Explore the Star Wars Universe by sagas, series, eras, and more!",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "logo": "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
   "background": "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
   "catalogs": [
+    {
+      "type": "StarWars",
+      "id": "sw-movies-series-chronological",
+      "name": "Movies & Series Chronological"
+    },
+    {
+      "type": "StarWars",
+      "id": "sw-movies-series-release",
+      "name": "Movies & Series Release"
+    },
     {
       "type": "StarWars",
       "id": "sw-skywalker-saga",

@@ -1,6 +1,6 @@
 {
   "name": "star-wars-addon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Stremio addon for exploring the Star Wars Universe.",
   "scripts": {
     "start:server": "node src/start.js"

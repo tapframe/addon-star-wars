@@ -13,6 +13,9 @@ const newRepublicEraData = require('../Data/newRepublicEraData');
 const highRepublicEraData = require('../Data/highRepublicEraData');
 const anthologyFilmsData = require('../Data/anthologyFilmsData');
 const liveActionSeriesData = require('../Data/liveActionSeriesData');
+const skywalkerSagaData = require('../Data/skywalkerSagaData');
+const moviesSeriesChronologicalData = require('../Data/moviesSeriesChronologicalData');
+const moviesSeriesReleaseData = require('../Data/moviesSeriesReleaseData');
 
 require('dotenv').config();
 
@@ -202,6 +205,16 @@ function getAllCatalogs() {
     return [
         {
             type: "StarWars",
+            id: "sw-movies-series-chronological",
+            name: "Movies & Series Chronological"
+        },
+        {
+            type: "StarWars",
+            id: "sw-movies-series-release",
+            name: "Movies & Series Release"
+        },
+        {
+            type: "StarWars",
             id: "sw-skywalker-saga",
             name: "Skywalker Saga"
         },
@@ -279,7 +292,7 @@ app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
 
     const manifest = {
         id: `com.starwars.addon.custom.${selectedCatalogIds.join('.')}`.slice(0, 100),
-        version: '1.0.0',
+        version: '1.0.1',
         name: "Star Wars Universe Custom",
         description: `Your personalized selection of Star Wars catalogs: ${selectedApiCatalogs.map(c => c.name).join(', ')}`,
         logo: 'https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png',
@@ -305,7 +318,7 @@ app.get('/manifest.json', (req, res) => {
         id: "com.starwars.addon",
         name: "Star Wars Universe",
         description: "Explore the Star Wars Universe by sagas, series, eras, and more!",
-        version: "1.0.0",
+        version: "1.0.1",
         logo: "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
         background: "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
         catalogs: getAllCatalogs(),
@@ -327,6 +340,20 @@ app.get('/api/catalogs', (req, res) => {
     
     const catalogInfo = [
         { 
+            id: 'sw-movies-series-chronological', 
+            name: 'Movies & Series Chronological', 
+            category: 'Orderings',
+            description: 'All movies and series in in-universe chronological order.',
+            icon: 'list-ol' // Font Awesome icon for ordered list
+        },
+        { 
+            id: 'sw-movies-series-release', 
+            name: 'Movies & Series Release', 
+            category: 'Orderings',
+            description: 'All movies and series by their original release date.',
+            icon: 'calendar-alt' // Font Awesome icon for calendar/release
+        },
+        { 
             id: 'sw-skywalker-saga', 
             name: 'Skywalker Saga', 
             category: 'Sagas',
@@ -340,63 +367,63 @@ app.get('/api/catalogs', (req, res) => {
             description: 'Standalone stories expanding the Star Wars universe.',
             icon: 'film' 
         },
-        { 
+        {
             id: 'sw-live-action-series', 
             name: 'Live-Action Series', 
             category: 'Series',
             description: 'Television series exploring various characters and timelines.',
             icon: 'tv'
         },
-        { 
+        {
             id: 'sw-animated-series', 
             name: 'Animated Series', 
             category: 'Series',
             description: 'Animated shows set in various eras of the Star Wars timeline.',
             icon: 'play-circle' 
         },
-        { 
+        {
             id: 'sw-micro-series-shorts', 
             name: 'Micro-Series & Shorts', 
             category: 'Shorts',
             description: 'Short-form content offering unique stories.',
             icon: 'th-large'
         },
-        { 
+        {
             id: 'sw-high-republic-era', 
             name: 'High Republic Era', 
             category: 'Eras',
             description: 'Stories from the golden age of the Jedi.',
             icon: 'landmark'
         },
-        { 
+        {
             id: 'sw-empire-era', 
             name: 'Empire Era', 
             category: 'Eras',
             description: 'Content during the reign of the Galactic Empire.',
             icon: 'empire'
         },
-        { 
+        {
             id: 'sw-new-republic-era', 
             name: 'New Republic Era', 
             category: 'Eras',
             description: 'Stories following the fall of the Empire.',
             icon: 'rebel'
         },
-        { 
+        {
             id: 'sw-bounty-hunters-underworld', 
             name: 'Bounty Hunters & Underworld', 
             category: 'Themes',
-            description: 'Exploring the galaxy\'s criminal elements.',
+            description: "Exploring the galaxy's criminal elements.",
             icon: 'user-secret'
         },
-        { 
+        {
             id: 'sw-jedi-sith-lore', 
             name: 'Jedi & Sith Lore', 
             category: 'Themes',
             description: 'Delving into the histories of Jedi and Sith.',
             icon: 'book-dead'
         },
-        { 
+        {
             id: 'sw-droids-creatures', 
             name: 'Droids & Creatures', 
             category: 'Themes',
@@ -427,7 +454,8 @@ app.get('/catalog/:catalogsParam/catalog/:type/:id.json', async (req, res) => {
     try {
         switch (id) {
             case 'sw-skywalker-saga':
-                dataSource = require('../Data/skywalkerSagaData');
+                dataSource = skywalkerSagaData;
+                dataSourceName = 'Skywalker Saga';
                 break;
             case 'sw-bounty-hunters-underworld':
                 dataSource = bountyHuntersUnderworldData;
@@ -460,6 +488,14 @@ app.get('/catalog/:catalogsParam/catalog/:type/:id.json', async (req, res) => {
             case 'sw-live-action-series':
                 dataSource = liveActionSeriesData;
                 dataSourceName = 'Live-Action Series';
+                break;
+            case 'sw-movies-series-chronological':
+                dataSource = moviesSeriesChronologicalData;
+                dataSourceName = 'Movies & Series Chronological';
+                break;
+            case 'sw-movies-series-release':
+                dataSource = moviesSeriesReleaseData;
+                dataSourceName = 'Movies & Series Release';
                 break;
             default:
                 console.warn(`Unrecognized catalog ID: ${id}`);
@@ -509,7 +545,8 @@ app.get('/catalog/:type/:id.json', async (req, res) => {
     try {
         switch (id) {
             case 'sw-skywalker-saga':
-                dataSource = require('../Data/skywalkerSagaData');
+                dataSource = skywalkerSagaData;
+                dataSourceName = 'Skywalker Saga';
                 break;
             case 'sw-bounty-hunters-underworld':
                 dataSource = bountyHuntersUnderworldData;
@@ -542,6 +579,14 @@ app.get('/catalog/:type/:id.json', async (req, res) => {
             case 'sw-live-action-series':
                 dataSource = liveActionSeriesData;
                 dataSourceName = 'Live-Action Series';
+                break;
+            case 'sw-movies-series-chronological':
+                dataSource = moviesSeriesChronologicalData;
+                dataSourceName = 'Movies & Series Chronological';
+                break;
+            case 'sw-movies-series-release':
+                dataSource = moviesSeriesReleaseData;
+                dataSourceName = 'Movies & Series Release';
                 break;
             default:
                 console.warn(`Unrecognized catalog ID: ${id}`);
