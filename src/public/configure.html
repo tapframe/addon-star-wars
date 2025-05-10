@@ -693,7 +693,7 @@
                         })
                         .then(data => {
                             this.catalogs = data;
-                            this.selectAll();
+                            this.applyPredefinedSelectionsOrSelectAll();
                             this.loading = false;
                         })
                         .catch(error => {
@@ -701,6 +701,22 @@
                             this.error = true;
                             this.loading = false;
                         });
+                },
+                applyPredefinedSelectionsOrSelectAll() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const predefinedIdsParam = urlParams.get('predefined');
+
+                    if (predefinedIdsParam) {
+                        const predefinedIds = predefinedIdsParam.split(',');
+                        this.selectedCatalogs = predefinedIds.filter(id => this.catalogs.some(catalog => catalog.id === id));
+                        if (this.selectedCatalogs.length > 0) {
+                           this.showInstallPanel = false;
+                        } else {
+                            this.selectAll();
+                        }
+                    } else {
+                        this.selectAll();
+                    }
                 },
                 toggleDarkMode() {
                     this.darkMode = !this.darkMode;

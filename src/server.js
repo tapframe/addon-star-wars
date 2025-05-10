@@ -280,6 +280,13 @@ app.get('/configure', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'configure.html'));
 });
 
+// New route for configured catalog access
+app.get('/catalog/:catalogIds/configure', (req, res) => {
+    const { catalogIds } = req.params;
+    // Redirect to the main configure page with catalogIds as a query parameter
+    res.redirect(`/configure?predefined=${catalogIds}`);
+});
+
 // Custom catalog manifest endpoint
 app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
     const { catalogsParam } = req.params;
