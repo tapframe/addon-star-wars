@@ -545,6 +545,26 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Bottom Generate Link Button Section -->
+                    <div class="mt-8 md:mt-12 py-6 border-t border-swGray dark:border-slate-700 text-center">
+                        <button
+                            @click="generateLink"
+                            id="bottomGenerateLinkBtn"
+                            class="sw-button bg-swYellow text-gray-900 px-6 py-3 sm:px-8 sm:py-3 rounded-lg hover:bg-swYellow-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-swYellow transition-all text-base sm:text-lg font-semibold shadow-md hover:shadow-lg"
+                            :disabled="selectedCatalogs.length === 0"
+                            :class="{'opacity-50 cursor-not-allowed': selectedCatalogs.length === 0}"
+                            aria-label="Generate Installation Link"
+                        >
+                            <i class="fas fa-cogs mr-2" aria-hidden="true"></i>Generate Installation Link
+                        </button>
+                        <p v-if="selectedCatalogs.length === 0" class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-3">
+                            Select catalogs above to enable this button.
+                        </p>
+                        <p v-else class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-3">
+                            Click to generate the Stremio installation link for your {{ selectedCatalogs.length }} selected {{ selectedCatalogs.length === 1 ? 'catalog' : 'catalogs' }}.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -673,6 +693,19 @@
                     return this.categories;
                 }
             },
+            watch: {
+                selectedCatalogs(newVal, oldVal) {
+                    // If the install panel is shown and selections change, hide it and clear links
+                    if (this.showInstallPanel) {
+                        console.log('Selections changed, hiding old install panel.');
+                        this.showInstallPanel = false;
+                        this.installUrl = '';
+                        this.stremioUrl = '';
+                        // Optionally, add a message to the user here if needed
+                        // For example, this.userMessage = "Selections changed. Please generate a new link.";
+                    }
+                }
+            },
             mounted() {
                 if (localStorage.getItem('darkMode') === 'enabled') {
                     this.darkMode = true;
@@ -736,6 +769,8 @@
                 deselectAll() {
                     this.selectedCatalogs = [];
                     this.showInstallPanel = false;
+                    this.installUrl = ''; // Clear stale URL
+                    this.stremioUrl = ''; // Clear stale URL
                 },
                 toggleCatalog(catalog) {
                     const index = this.selectedCatalogs.indexOf(catalog.id);
