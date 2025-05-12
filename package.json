@@ -1,7 +1,8 @@
 {
-  "name": "star-wars-addon",
-  "version": "1.0.1",
-  "description": "A Stremio addon for exploring the Star Wars Universe.",
+  "name": "addon-star-wars",
+  "version": "1.1.1",
+  "description": "Explore the Star Wars Universe within Stremio! Browse movies and series organized by Sagas, Eras, Content Types, and Themes.",
+  "main": "src/server.js",
   "scripts": {
     "start:server": "node src/start.js"
   },

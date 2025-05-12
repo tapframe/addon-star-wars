@@ -347,7 +347,7 @@ app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
 
     const manifest = {
         id: manifestId,
-        version: '1.0.1',
+        version: '1.1.1',
         name: "Star Wars Universe Custom",
         description: `Your personalized selection of Star Wars catalogs: ${selectedApiCatalogs.map(c => c.name).join(', ')}`,
         logo: 'https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png',
@@ -373,7 +373,7 @@ app.get('/manifest.json', (req, res) => {
         id: "com.starwars.addon",
         name: "Star Wars Universe",
         description: "Explore the Star Wars Universe by sagas, series, eras, and more!",
-        version: "1.0.1",
+        version: "1.1.1",
         logo: "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
         background: "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
         catalogs: getAllCatalogs(),
@@ -401,7 +401,7 @@ app.get('/rpdb/:rpdbKey/manifest.json', (req, res) => {
         id: manifestId,
         name: "Star Wars Universe",
         description: "Explore the Star Wars Universe by sagas, series, eras, and more! (with IMDb ratings on posters)",
-        version: "1.0.1",
+        version: "1.1.1",
         logo: "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
         background: "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
         catalogs: getAllCatalogs(),
