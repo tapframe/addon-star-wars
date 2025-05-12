@@ -825,10 +825,9 @@
                     if (this.catalogs && this.selectedCatalogs.length === this.catalogs.length) {
                         // All selected, use the default manifest URL
                         if (this.rpdbKey) {
-                            // If RPDB key is provided, add it as a parameter
-                            const urlParams = `rpdb=${encodeURIComponent(this.rpdbKey)}`;
-                            this.installUrl = `${baseUrl}/manifest.json?${urlParams}`;
-                            this.stremioUrl = `stremio://${host}/manifest.json?${urlParams}`;
+                            // If RPDB key is provided, include it in the path
+                            this.installUrl = `${baseUrl}/rpdb/${encodeURIComponent(this.rpdbKey)}/manifest.json`;
+                            this.stremioUrl = `stremio://${host}/rpdb/${encodeURIComponent(this.rpdbKey)}/manifest.json`;
                         } else {
                             // No RPDB key, use standard URL
                             this.installUrl = `${baseUrl}/manifest.json`;

@@ -389,6 +389,34 @@ app.get('/manifest.json', (req, res) => {
     res.json(manifest);
 });
 
+// RPDB key manifest endpoint - handles full manifest with RPDB key using path structure
+app.get('/rpdb/:rpdbKey/manifest.json', (req, res) => {
+    const { rpdbKey } = req.params;
+    console.log(`Default manifest requested with RPDB key: ${rpdbKey}`);
+    
+    // Create a custom ID that includes RPDB key info
+    const manifestId = `com.starwars.addon.rpdb.${rpdbKey.substring(0, 8)}`;
+    
+    const manifest = {
+        id: manifestId,
+        name: "Star Wars Universe",
+        description: "Explore the Star Wars Universe by sagas, series, eras, and more! (with IMDb ratings on posters)",
+        version: "1.0.1",
+        logo: "https://www.freeiconspng.com/uploads/logo-star-wars-png-4.png",
+        background: "https://external-preview.redd.it/jKUmLf4aiMkrTiayTutRXvwp7uJZJGTxcvENapNbWUA.jpg?auto=webp&s=040c57ceb2d3d81a880ee31973d20d712443cef5",
+        catalogs: getAllCatalogs(),
+        resources: ["catalog"],
+        types: ["movie", "series"],
+        idPrefixes: ["sw_"],
+        behaviorHints: {
+            configurable: true
+        },
+        contactEmail: "nayifveliya99@gmail.com"
+    };
+    
+    res.json(manifest);
+});
+
 // API endpoint for catalog info
 app.get('/api/catalogs', (req, res) => {
     console.log('Catalog info requested');
@@ -488,6 +516,99 @@ app.get('/api/catalogs', (req, res) => {
     ];
     
     res.json(catalogInfo);
+});
+
+// RPDB path-based catalog endpoint
+app.get('/rpdb/:rpdbKey/catalog/:type/:id.json', async (req, res) => {
+    const { rpdbKey, type, id } = req.params;
+    console.log(`RPDB catalog requested - Type: ${type}, ID: ${id}, RPDB Key: ${rpdbKey}`);
+    
+    // Check cache
+    const cacheKey = `default-${id}`;
+    if (cachedCatalog[cacheKey]) {
+        console.log(`✅ Returning cached catalog for ID: ${cacheKey} with RPDB posters`);
+        const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, cachedCatalog[cacheKey].metas);
+        return res.json({ metas: metasWithRpdbPosters });
+    }
+    
+    let dataSource;
+    let dataSourceName = id;
+    
+    // Load data based on catalog ID
+    try {
+        switch (id) {
+            case 'sw-skywalker-saga':
+                dataSource = skywalkerSagaData;
+                dataSourceName = 'Skywalker Saga';
+                break;
+            case 'sw-bounty-hunters-underworld':
+                dataSource = bountyHuntersUnderworldData;
+                break;
+            case 'sw-jedi-sith-lore':
+                dataSource = jediSithLoreData;
+                break;
+            case 'sw-droids-creatures':
+                dataSource = droidsCreaturesData;
+                break;
+            case 'sw-animated-series':
+                dataSource = animatedSeriesData;
+                break;
+            case 'sw-empire-era':
+                dataSource = empireEraData;
+                break;
+            case 'sw-micro-series-shorts':
+                dataSource = microSeriesShortsData;
+                break;
+            case 'sw-new-republic-era':
+                dataSource = newRepublicEraData;
+                break;
+            case 'sw-high-republic-era':
+                dataSource = highRepublicEraData;
+                break;
+            case 'sw-anthology-films':
+                dataSource = anthologyFilmsData;
+                dataSourceName = 'Anthology Films';
+                break;
+            case 'sw-live-action-series':
+                dataSource = liveActionSeriesData;
+                dataSourceName = 'Live-Action Series';
+                break;
+            case 'sw-movies-series-chronological':
+                dataSource = moviesSeriesChronologicalData;
+                dataSourceName = 'Movies & Series Chronological';
+                break;
+            case 'sw-movies-series-release':
+                dataSource = moviesSeriesReleaseData;
+                dataSourceName = 'Movies & Series Release';
+                break;
+            default:
+                console.warn(`Unrecognized catalog ID: ${id}`);
+                return res.json({ metas: [] });
+        }
+        
+        if (!Array.isArray(dataSource)) {
+            throw new Error(`Data source for ID ${id} is not a valid array.`);
+        }
+        console.log(`Loaded ${dataSource.length} items for catalog: ${dataSourceName}`);
+    } catch (error) {
+        console.error(`❌ Error loading data for catalog ID ${id}:`, error.message);
+        return res.json({ metas: [] });
+    }
+    
+    console.log(`⏳ Generating catalog for ${dataSourceName} with RPDB posters...`);
+    const metas = await Promise.all(
+        dataSource.map(item => fetchAdditionalData(item))
+    );
+    
+    const validMetas = metas.filter(item => item !== null);
+    console.log(`✅ Catalog generated with ${validMetas.length} items for ID: ${id}`);
+    
+    // Store in cache (without RPDB posters)
+    cachedCatalog[cacheKey] = { metas: validMetas };
+    
+    // Apply RPDB posters 
+    const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, validMetas);
+    return res.json({ metas: metasWithRpdbPosters });
 });
 
 // Custom catalog endpoint
@@ -609,10 +730,26 @@ app.get('/catalog/:type/:id.json', async (req, res) => {
     const { type, id } = req.params;
     console.log(`Default catalog requested - Type: ${type}, ID: ${id}`);
     
-    // Check for RPDB key in query parameters
-    const rpdbKey = req.query.rpdb || null;
+    // Check for RPDB key in various sources
+    let rpdbKey = null;
+    
+    // Check for RPDB key in query parameters (for backward compatibility)
+    if (req.query.rpdb) {
+        rpdbKey = req.query.rpdb;
+    }
+    
+    // Check referrer for a path-based RPDB key format
+    const referer = req.get('Referrer') || '';
+    if (!rpdbKey && referer) {
+        // Extract RPDB key from path like /rpdb/KEY/manifest.json
+        const rpdbMatch = referer.match(/\/rpdb\/([^\/]+)\/manifest\.json/);
+        if (rpdbMatch && rpdbMatch[1]) {
+            rpdbKey = decodeURIComponent(rpdbMatch[1]);
+        }
+    }
+    
     if (rpdbKey) {
-        console.log(`RPDB key detected in query: ${rpdbKey}`);
+        console.log(`RPDB key detected: ${rpdbKey}`);
     }
     
     // Check cache
