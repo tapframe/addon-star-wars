@@ -548,6 +548,38 @@
 
                     <!-- Bottom Generate Link Button Section -->
                     <div class="mt-8 md:mt-12 py-6 border-t border-swGray dark:border-slate-700 text-center">
+                        <!-- RPDB Key Input Section -->
+                        <div class="max-w-2xl mx-auto mb-6 bg-white dark:bg-slate-700 p-4 rounded-lg">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 dark:text-white text-sm md:text-base">
+                                    <i class="fas fa-star-half-alt mr-2"></i>Poster Ratings (Optional)
+                                </h4>
+                                <a href="https://ratingposterdb.com" target="_blank" class="text-swYellow dark:text-swYellow-light text-xs hover:underline">
+                                    <i class="fas fa-info-circle mr-1"></i>About RPDB
+                                </a>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm mb-3">
+                                Show IMDb ratings directly on movie/series posters by adding your RatingPosterDB key.
+                            </p>
+                            <div class="flex">
+                                <input 
+                                    type="text" 
+                                    v-model="rpdbKey" 
+                                    class="flex-grow px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-swYellow" 
+                                    placeholder="Enter RPDB key (format: t0-xxxxxxxx)" 
+                                    pattern="t[0-3]-[a-zA-Z0-9\-]+"
+                                >
+                                <a 
+                                    href="https://ratingposterdb.com" 
+                                    target="_blank" 
+                                    class="px-3 py-2 bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-white rounded-r-lg hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors"
+                                    title="Visit RatingPosterDB to get your key"
+                                >
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
                         <button
                             @click="generateLink"
                             id="bottomGenerateLinkBtn"
@@ -679,7 +711,8 @@
                 showCopiedToast: false,
                 darkMode: false,
                 loading: true,
-                error: false
+                error: false,
+                rpdbKey: ''
             },
             computed: {
                 categories() {
@@ -791,13 +824,30 @@
                     // Check if all catalogs are selected
                     if (this.catalogs && this.selectedCatalogs.length === this.catalogs.length) {
                         // All selected, use the default manifest URL
-                        this.installUrl = `${baseUrl}/manifest.json`;
-                        this.stremioUrl = `stremio://${host}/manifest.json`;
+                        if (this.rpdbKey) {
+                            // If RPDB key is provided, add it as a parameter
+                            const urlParams = `rpdb=${encodeURIComponent(this.rpdbKey)}`;
+                            this.installUrl = `${baseUrl}/manifest.json?${urlParams}`;
+                            this.stremioUrl = `stremio://${host}/manifest.json?${urlParams}`;
+                        } else {
+                            // No RPDB key, use standard URL
+                            this.installUrl = `${baseUrl}/manifest.json`;
+                            this.stremioUrl = `stremio://${host}/manifest.json`;
+                        }
                     } else {
                         // Subset selected, use the custom catalog URL
                         const selectedIds = this.selectedCatalogs.join(',');
-                        this.installUrl = `${baseUrl}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
-                        this.stremioUrl = `stremio://${host}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
+                        
+                        if (this.rpdbKey) {
+                            // If RPDB key is provided, include it in the URL format
+                            const configParts = [selectedIds, this.rpdbKey].join(':');
+                            this.installUrl = `${baseUrl}/catalog/${encodeURIComponent(configParts)}/manifest.json`;
+                            this.stremioUrl = `stremio://${host}/catalog/${encodeURIComponent(configParts)}/manifest.json`;
+                        } else {
+                            // No RPDB key, use standard catalog URL
+                            this.installUrl = `${baseUrl}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
+                            this.stremioUrl = `stremio://${host}/catalog/${encodeURIComponent(selectedIds)}/manifest.json`;
+                        }
                     }
 
                     this.showInstallPanel = true;

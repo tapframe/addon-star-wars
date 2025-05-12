@@ -64,6 +64,28 @@ async function getTmdbDetails(id, type) {
     }
 }
 
+// Helper function to replace posters with RPDB posters when a valid key is provided
+function replaceRpdbPosters(rpdbKey, metas) {
+    if (!rpdbKey) {
+        return metas;
+    }
+
+    return metas.map(meta => {
+        // If the meta has an IMDb ID in proper format (tt12345), use it for RPDB poster
+        const imdbId = meta.id.startsWith('tt') ? meta.id : null;
+        
+        if (imdbId) {
+            return {
+                ...meta, 
+                poster: `https://api.ratingposterdb.com/${rpdbKey}/imdb/poster-default/${imdbId}.jpg`
+            };
+        }
+        
+        // If no valid IMDb ID, keep original poster
+        return meta;
+    });
+}
+
 // Helper function to fetch additional metadata
 async function fetchAdditionalData(item) {
   console.log('\n--- Fetching details for item: ---', item); // Log raw item
@@ -290,7 +312,21 @@ app.get('/catalog/:catalogIds/configure', (req, res) => {
 // Custom catalog manifest endpoint
 app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
     const { catalogsParam } = req.params;
-    const selectedCatalogIds = catalogsParam.split(',').map(id => id.trim());
+    
+    // Parse configuration parameter for RPDB key
+    let rpdbKey = null;
+    let selectedCatalogIds = catalogsParam;
+    
+    // Check if the parameter contains catalog IDs and RPDB key in format "catalog1,catalog2:rpdbKey"
+    if (catalogsParam.includes(':')) {
+        const parts = catalogsParam.split(':');
+        selectedCatalogIds = parts[0]; // First part is catalog IDs
+        rpdbKey = parts[1];    // Second part is RPDB key
+        console.log(`Custom manifest with RPDB key: ${rpdbKey}`);
+        selectedCatalogIds = selectedCatalogIds.split(',').map(id => id.trim());
+    } else {
+        selectedCatalogIds = catalogsParam.split(',').map(id => id.trim());
+    }
 
     const allApiCatalogs = getAllCatalogs(); // Fetch all defined API catalogs
 
@@ -301,8 +337,16 @@ app.get('/catalog/:catalogsParam/manifest.json', (req, res) => {
         return res.status(404).send('No valid catalogs selected or found.');
     }
 
+    // Create a custom ID that includes RPDB key info if present
+    const customId = rpdbKey 
+        ? `com.starwars.addon.custom.${selectedCatalogIds.join('.')}.rpdb`
+        : `com.starwars.addon.custom.${selectedCatalogIds.join('.')}`;
+        
+    // Limit ID length to avoid issues
+    const manifestId = customId.slice(0, 100);
+
     const manifest = {
-        id: `com.starwars.addon.custom.${selectedCatalogIds.join('.')}`.slice(0, 100),
+        id: manifestId,
         version: '1.0.1',
         name: "Star Wars Universe Custom",
         description: `Your personalized selection of Star Wars catalogs: ${selectedApiCatalogs.map(c => c.name).join(', ')}`,
@@ -451,10 +495,27 @@ app.get('/catalog/:catalogsParam/catalog/:type/:id.json', async (req, res) => {
     const { catalogsParam, type, id } = req.params;
     console.log(`Custom catalog requested - Catalogs: ${catalogsParam}, Type: ${type}, ID: ${id}`);
     
+    // Parse configuration parameter for RPDB key
+    let rpdbKey = null;
+    let catalogIds = catalogsParam;
+    
+    // Check if the parameter contains catalog IDs and RPDB key in format "catalog1,catalog2:rpdbKey"
+    if (catalogsParam.includes(':')) {
+        const parts = catalogsParam.split(':');
+        catalogIds = parts[0]; // First part is catalog IDs
+        rpdbKey = parts[1];    // Second part is RPDB key
+        console.log(`RPDB key detected: ${rpdbKey}`);
+    }
+    
     // Check cache
     const cacheKey = `custom-${id}-${catalogsParam}`;
     if (cachedCatalog[cacheKey]) {
         console.log(`✅ Returning cached catalog for ID: ${cacheKey}`);
+        // Apply RPDB posters to cached results if key is provided
+        if (rpdbKey) {
+            const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, cachedCatalog[cacheKey].metas);
+            return res.json({ metas: metasWithRpdbPosters });
+        }
         return res.json(cachedCatalog[cacheKey]);
     }
     
@@ -532,6 +593,12 @@ app.get('/catalog/:catalogsParam/catalog/:type/:id.json', async (req, res) => {
     
     // Store in cache
     cachedCatalog[cacheKey] = { metas: validMetas };
+    
+    // Apply RPDB posters if key is provided
+    if (rpdbKey) {
+        const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, validMetas);
+        return res.json({ metas: metasWithRpdbPosters });
+    }
     
     // Return the data
     return res.json(cachedCatalog[cacheKey]);
@@ -542,10 +609,21 @@ app.get('/catalog/:type/:id.json', async (req, res) => {
     const { type, id } = req.params;
     console.log(`Default catalog requested - Type: ${type}, ID: ${id}`);
     
+    // Check for RPDB key in query parameters
+    const rpdbKey = req.query.rpdb || null;
+    if (rpdbKey) {
+        console.log(`RPDB key detected in query: ${rpdbKey}`);
+    }
+    
     // Check cache
     const cacheKey = `default-${id}`;
     if (cachedCatalog[cacheKey]) {
         console.log(`✅ Returning cached catalog for ID: ${cacheKey}`);
+        // Apply RPDB posters to cached results if key is provided
+        if (rpdbKey) {
+            const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, cachedCatalog[cacheKey].metas);
+            return res.json({ metas: metasWithRpdbPosters });
+        }
         return res.json(cachedCatalog[cacheKey]);
     }
     
@@ -623,6 +701,12 @@ app.get('/catalog/:type/:id.json', async (req, res) => {
     
     // Store in cache
     cachedCatalog[cacheKey] = { metas: validMetas };
+    
+    // Apply RPDB posters if key is provided
+    if (rpdbKey) {
+        const metasWithRpdbPosters = replaceRpdbPosters(rpdbKey, validMetas);
+        return res.json({ metas: metasWithRpdbPosters });
+    }
     
     // Return the data
     return res.json(cachedCatalog[cacheKey]);
