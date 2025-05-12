@@ -11,6 +11,7 @@ Explore the Star Wars Universe within Stremio! Browse movies and series organize
 *   ⚡ **Data Updates**: Includes scripts to easily fetch and update content metadata from TMDb/OMDb.
 *   🚀 **Fast & Lightweight**: Built using Node.js and Express.
 *   🔧 **Configurable**: Choose exactly which catalogs you want to see in Stremio.
+*   ⭐ **Poster Ratings**: Optional integration with [RatingPosterDB](https://ratingposterdb.com) to display IMDb ratings directly on posters (requires RPDB key).
 
 ---
 
@@ -22,17 +23,20 @@ Create your personalized Star Wars Universe addon with only the catalogs you wan
 
 1.  Visit the configuration page: [`https://addon-star-wars.onrender.com/configure`](https://addon-star-wars.onrender.com/configure)
 2.  Select the catalogs you want to include.
-3.  Click the "Generate Installation Link" button.
-4.  Copy the generated link or click the "Install in Stremio" button.
-5.  Open Stremio (if it didn't open automatically), paste the link into the Addon search bar if needed, and press Enter to install.
+3.  **(Optional)** Enter your [RatingPosterDB](https://ratingposterdb.com) key in the input field to show IMDb ratings on posters.
+4.  Click the "Install addon" button.
+5.  The installation link will be generated in a popup. Click "Install in Stremio" or copy the URL manually.
+6.  Open Stremio (if it didn't open automatically), paste the link into the Addon search bar if needed, and press Enter to install.
 
 ### Manual Installation (All Catalogs)
 
-To install the addon with all catalogs included:
+To install the addon with all catalogs included (without RPDB ratings):
 
 1.  Open Stremio.
 2.  Paste the default manifest URL into the Addon search bar: [`https://addon-star-wars.onrender.com/manifest.json`](https://addon-star-wars.onrender.com/manifest.json)
 3.  Press Enter to install.
+
+*Note: To install with all catalogs *and* RPDB ratings, visit the configuration page, click "Select All", enter your RPDB key, and then install using the generated link.*
 
 ---
 
