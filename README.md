@@ -21,7 +21,7 @@ Explore the Star Wars Universe within Stremio! Browse movies and series organize
 
 Create your personalized Star Wars Universe addon with only the catalogs you want:
 
-1.  Visit the configuration page: [`https://addon-star-wars.onrender.com/configure`](https://addon-star-wars.onrender.com/configure)
+1.  Visit the configuration page: [`https://addon-star-wars.onrender.com/configure`](https://addon-star-wars-u9e3.onrender.com)
 2.  Select the catalogs you want to include.
 3.  **(Optional)** Enter your [RatingPosterDB](https://ratingposterdb.com) key in the input field to show IMDb ratings on posters.
 4.  Click the "Install addon" button.
